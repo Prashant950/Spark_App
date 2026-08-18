@@ -24,6 +24,10 @@
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ],
       "edgeToEdgeEnabled": true,
@@ -57,6 +61,12 @@
       "eas": {
         "projectId": "d32b2c19-bf22-407e-8db2-86bcb2a0ad0b"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d32b2c19-bf22-407e-8db2-86bcb2a0ad0b"
     }
   }
 }

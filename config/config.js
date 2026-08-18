@@ -12,9 +12,9 @@ if (Platform.OS !== 'web') {
   }
 }
 
-const BACKEND_URL = `http://${BACKEND_IP}:${BACKEND_PORT}`;
+//const BACKEND_URL = `http://${BACKEND_IP}:${BACKEND_PORT}`;
 
-//const BACKEND_URL = 'https://spark-dating-app-backend.onrender.com';
+const BACKEND_URL = 'https://spark-dating-app-backend.onrender.com';
 
 export { BACKEND_IP, BACKEND_PORT, BACKEND_URL };
 

@@ -4,7 +4,6 @@ import { StyleSheet, Platform, View } from "react-native";
 import {
   FontAwesome5,
   Ionicons,
-  Feather,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 
@@ -38,22 +37,7 @@ export default function UserTabsLayout() {
           }}
         />
 
-        {/* 2. Explore Tab */}
-        {/* <Tabs.Screen
-          name="explore"
-          options={{
-            title: "Explore",
-            tabBarIcon: ({ color, focused }) => (
-              <Feather
-                name="compass"
-                size={24}
-                color={focused ? "#FF4081" : color}
-              />
-            ),
-          }}
-        /> */}
-
-        {/* 3. Likes Tab */}
+        {/* 2. Likes Tab */}
         <Tabs.Screen
           name="likes"
           options={{
