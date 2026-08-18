@@ -113,6 +113,7 @@ const Welcomepage = () => {
           activeOpacity={0.85}
           onPress={async () => {
             await AsyncStorage.setItem("onboardingStep", "EMAIL_VERIFIED");
+            await AsyncStorage.setItem("lastVisitedRoute", "/EnterName");
             router.replace("/EnterName");
           }}
         >

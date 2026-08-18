@@ -37,7 +37,7 @@ const EnterName = () => {
       }
     }, Platform.OS === "android" ? 50 : 0);
   };
-
+   
   useEffect(() => {
     AsyncStorage.setItem("lastVisitedRoute", "/EnterName").catch(() => {});
   }, []);

@@ -98,6 +98,32 @@ const MobileOTPVerify = () => {
 
   const isComplete = otp.every((digit) => digit !== "");
 
+  const getNextOnboardingRoute = (step) => {
+    const routeMap = {
+      EMAIL_VERIFIED: "/Welcomepage",
+      NAME_COMPLETED: "/EnterName",
+      DOB_COMPLETED: "/EnterDOB",
+      GENDER_COMPLETED: "/ChooseGender",
+      SHOW_ME_COMPLETED: "/UserDetails/WhoInterested",
+      DISTANCE_COMPLETED: "/UserDetails/DistancePreference",
+      RELATIONSHIP_GOAL_COMPLETED: "/UserDetails/LookingRelationship",
+      STUDYING_COMPLETED: "/UserDetails/StudyingPage",
+      LIFESTYLE_COMPLETED: "/UserDetails/UsersFirstPageLifestyle",
+      INTERESTS_COMPLETED: "/UserDetails/UsersSecondPageLifeStyle",
+      ESSENTIALS_COMMUNICATION_STYLE_COMPLETED: "/UserDetails/AuthenticityAtracts/CommunicateStyleFirstPage",
+      ESSENTIALS_COMMUNICATION_STYLE_COMPLETED2: "/UserDetails/AuthenticityAtracts/CommunicateSecondPage",
+      ESSENTIALS_COMMUNICATION_STYLE_COMPLETED3: "/UserDetails/AuthenticityAtracts/ComunicateThirdPage",
+      CREATIVITY_COMPLETED: "/UserDetails/UsersInterests10Pages/Creativity",
+      PHOTOS_COMPLETED: "/UserDetails/UserPhoto",
+      BIO_COMPLETED: "/UserDetails/UserEnterAbout",
+      LOCATION_COMPLETED: "/UserDetails/UserEnableLocation",
+      AVOID_SOMEONE_COMPLETED: "/UserDetails/AvoidSomeone",
+      PROFILE_COMPLETE: "/(user)/swipe",
+    };
+
+    return routeMap[step] || "/Welcomepage";
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#0D0B14" />
@@ -193,11 +219,15 @@ const MobileOTPVerify = () => {
               const response = await verifyOTP({ phoneNumber, otp: code }).unwrap();
 
               if (response?.success) {
+                const nextStep = response?.user?.onboardingStep || "EMAIL_VERIFIED";
+                const nextRoute = getNextOnboardingRoute(nextStep);
+
                 console.log("Phone verify response:", response);
                 console.log("Phone auth token:", response?.token ? response.token.slice(0, 20) + "..." : "missing");
                 dispatch(setCredentials({ user: response.user, token: response.token }));
-                await AsyncStorage.setItem("onboardingStep", response?.user?.onboardingStep || "EMAIL_VERIFIED");
-                router.replace("/Welcomepage");
+                await AsyncStorage.setItem("onboardingStep", nextStep);
+                await AsyncStorage.setItem("lastVisitedRoute", nextRoute);
+                router.replace(nextRoute);
               }
             } catch (error) {
               console.error("Phone OTP verify error:", error);

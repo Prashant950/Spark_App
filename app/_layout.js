@@ -57,7 +57,8 @@ export default function RootLayout() {
       <Provider store={store}>
         {/* Outer view container to completely block white flash during transitions */}
         <View style={{ flex: 1, backgroundColor: "#000000" }}>
-          <Stack
+          <Stack 
+          // initialRouteName="login"
             screenOptions={{
               headerShown: false,
               // Dark background for screens

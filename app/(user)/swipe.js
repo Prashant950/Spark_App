@@ -38,6 +38,7 @@ const CARD_HEIGHT = SCREEN_HEIGHT - BOTTOM_TAB_BAR_HEIGHT;
 
 const SwipeScreen = () => {
   const swiperRef = useRef(null);
+  const actionLockRef = useRef(false);
   const [photoIndices, setPhotoIndices] = useState({});
   const [matchData, setMatchData] = useState(null);
   const [profileModalUser, setProfileModalUser] = useState(null);
@@ -80,6 +81,36 @@ const SwipeScreen = () => {
     });
   };
 
+  const sendSwipeAction = async (targetUserId, action, shouldAnimate = false) => {
+    if (!targetUserId || actionLockRef.current) return;
+
+    actionLockRef.current = true;
+
+    try {
+      const result = await handleSwipeAction({
+        targetUserId,
+        action,
+      }).unwrap();
+
+      if (result?.isMatch) {
+        const matchedUser = result.matchedUser || users[cardIndex] || null;
+        setMatchData(matchedUser);
+      }
+
+      if (shouldAnimate) {
+        if (action === "DISLIKE") swiperRef.current?.swipeLeft();
+        if (action === "LIKE") swiperRef.current?.swipeRight();
+        if (action === "SUPERLIKE") swiperRef.current?.swipeTop();
+      }
+    } catch (err) {
+      console.error("Swipe Action Backend Error:", err);
+    } finally {
+      setTimeout(() => {
+        actionLockRef.current = false;
+      }, 300);
+    }
+  };
+
   // 🟢 Real Backend Swipe Action Trigger (LIKE / SUPERLIKE / DISLIKE)
   const onSwiped = async (swipedCardIndex, action) => {
     const targetUser = users[swipedCardIndex];
@@ -87,18 +118,7 @@ const SwipeScreen = () => {
 
     if (!targetUser?._id) return;
 
-    try {
-      const result = await handleSwipeAction({
-        targetUserId: targetUser._id,
-        action: action, // "LIKE", "SUPERLIKE", or "DISLIKE"
-      }).unwrap();
-
-      if (result?.isMatch) {
-        setMatchData(result.matchedUser || targetUser);
-      }
-    } catch (err) {
-      console.error("Swipe Action Backend Error:", err);
-    }
+    await sendSwipeAction(targetUser._id, action, false);
   };
 
   // 🟢 Real Backend Rewind Action
@@ -314,7 +334,10 @@ const SwipeScreen = () => {
                       <TouchableOpacity
                         activeOpacity={0.7}
                         style={[styles.actionBtn, styles.btnNope]}
-                        onPress={() => swiperRef.current?.swipeLeft()}
+                        onPress={() => {
+                          const targetUser = users[cardIndex] || users[0];
+                          if (targetUser?._id) sendSwipeAction(targetUser._id, "DISLIKE", true);
+                        }}
                       >
                         <Ionicons name="close" size={28} color="#FF4B4B" />
                       </TouchableOpacity>
@@ -323,7 +346,10 @@ const SwipeScreen = () => {
                       <TouchableOpacity
                         activeOpacity={0.7}
                         style={[styles.actionBtn, styles.btnSuper]}
-                        onPress={() => swiperRef.current?.swipeTop()}
+                        onPress={() => {
+                          const targetUser = users[cardIndex] || users[0];
+                          if (targetUser?._id) sendSwipeAction(targetUser._id, "SUPERLIKE", true);
+                        }}
                       >
                         <FontAwesome name="star" size={20} color="#00D2FF" />
                       </TouchableOpacity>
@@ -332,7 +358,10 @@ const SwipeScreen = () => {
                       <TouchableOpacity
                         activeOpacity={0.7}
                         style={[styles.actionBtn, styles.btnLike]}
-                        onPress={() => swiperRef.current?.swipeRight()}
+                        onPress={() => {
+                          const targetUser = users[cardIndex] || users[0];
+                          if (targetUser?._id) sendSwipeAction(targetUser._id, "LIKE", true);
+                        }}
                       >
                         <Ionicons name="heart" size={28} color="#00E676" />
                       </TouchableOpacity>

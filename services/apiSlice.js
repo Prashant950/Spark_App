@@ -48,7 +48,7 @@ export const apiSlice = createApi({
     "Messages",
     "Conversation",
     "like",
-    "LikesReceived","Profile",
+    "LikesReceived","Profile","SwipeFeed",
   ],
   endpoints: (builder) => ({
     // ================= AUTH ENDPOINTS =================

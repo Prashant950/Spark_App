@@ -75,12 +75,13 @@ export default function SettingsScreen() {
             await AsyncStorage.multiRemove([
               "token",
               "user",
+              "role",
               "onboardingStep",
               "lastVisitedRoute",
             ]);
-            router.replace("/(auth)/login");
+            router.replace("/login");
           } catch (_err) {
-            router.replace("/(auth)/login");
+            router.replace("/login");
           }
         },
       },
@@ -101,10 +102,10 @@ export default function SettingsScreen() {
             try {
               await deleteAccountApi().unwrap();
               await AsyncStorage.clear();
-              router.replace("/(auth)/login");
+              router.replace("/login");
             } catch (_err) {
               await AsyncStorage.clear();
-              router.replace("/(auth)/login");
+              router.replace("/login");
             }
           },
         },
